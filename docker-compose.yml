@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8003"
+    environment:
+      - NODE_ENV=production
+      - BACKEND_PORT=8003
+      # Add your backend settings here
+      - DB_USER=your_db_user
+      - DB_PASSWORD=your_db_password
+      - DB_HOST=your_db_host
+      - DB_PORT=5432
+      - DB_NAME=your_db_name
+      - PROJECT_NAME=BrightSeedHub
+      - API_V1_STR=/api/v1
+    # Alternatively, you can use an env_file to keep secrets out of compose:
+    # env_file:
+    #   - ./backend/.env
