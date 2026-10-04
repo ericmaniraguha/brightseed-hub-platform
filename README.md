@@ -123,3 +123,88 @@ brightseed-hub/
 ## 8. Development Credentials
 - **Admin Login:** `admin@brightseedhub.com`
 - **Admin Password:** `admin123`
+
+---
+
+## 9. How to Test & Run the Application
+
+Follow these steps to run the platform on your local machine.
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Git](https://git-scm.com/)
+
+### Step 1: Clone and Install
+First, install the dependencies for both the frontend and backend.
+```bash
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+### Step 2: Configure Environment Variables
+In the `backend` folder, duplicate the `.env.example` file and rename it to `.env`.
+```bash
+cd backend
+cp .env.example .env
+```
+*(The default settings in `.env.example` will work out of the box because the database uses SQLite locally).*
+
+### Step 3: Start the Development Servers
+You need to run both the backend API and the frontend React app simultaneously.
+
+**Terminal 1 (Backend):**
+```bash
+cd backend
+npm run dev
+# The API will run on http://localhost:8003
+```
+
+**Terminal 2 (Frontend):**
+```bash
+cd frontend
+npm run dev
+# The Website will run on http://localhost:5173
+```
+
+### Step 4: Database Migrations
+Because the backend is configured to use Sequelize ORM with `alter: true`, **database migrations happen automatically**. 
+When you start the backend server (`npm run dev`), Sequelize will automatically:
+- Connect to the SQLite database (or create `backend/database.sqlite` if it doesn't exist).
+- Read all your Models (`AdminUser.js`, `Career.js`, etc.).
+- Automatically generate or alter the database tables to match your models.
+
+You do **not** need to run any manual migration commands!
+
+### Step 5: Seed the Database
+To create the root admin user so you can log into the dashboard, run this command in a new terminal window (or use Postman):
+```bash
+curl -X POST http://localhost:8003/api/v1/admin/seed
+```
+This reads `ADMIN_EMAIL` and `ADMIN_PASSWORD` from your `.env` file and creates the user securely in the database.
+
+### Step 6: Testing the Application
+Once both servers are running and the database is seeded, you can test the platform:
+
+1. **Test the Public Site:** 
+   Open [http://localhost:5173](http://localhost:5173) in your browser. Navigate through the pages (Home, About, Services).
+2. **Test the Dynamic Careers Page:** 
+   Go to [http://localhost:5173/career](http://localhost:5173/career). If there are no jobs, it will gracefully show "No open positions right now".
+3. **Test the Admin Dashboard:** 
+   Go to [http://localhost:5173/admin/login](http://localhost:5173/admin/login) and log in using the credentials from your `.env` file (Default: `admin@brightseedhub.com` / `admin123`).
+4. **Test Data Creation:** 
+   Inside the admin dashboard, click on **Careers**, click **Add Position**, fill out the form, and save. Then go back to the public Careers page to verify the job appears instantly!
+
+---
+
+### (Optional) Run with Docker
+If you prefer running everything in a single container without installing Node.js locally:
+```bash
+# From the root brightseed-hub directory
+docker-compose up --build
+```
+This builds both the frontend and backend and serves them together on **port 8003**. You can then access the app at [http://localhost:8003](http://localhost:8003).

@@ -47,15 +47,18 @@ const adminLogin = async (req, res) => {
 // POST /api/v1/admin/seed — Create default admin user (run once)
 const seedAdmin = async (req, res) => {
   try {
-    const existing = await AdminUser.findOne({ where: { email: 'admin@brightseedhub.com' } });
+    const email = process.env.ADMIN_EMAIL || 'admin@brightseedhub.com';
+    const password = process.env.ADMIN_PASSWORD || 'admin123';
+
+    const existing = await AdminUser.findOne({ where: { email } });
     if (existing) {
       return res.json({ message: 'Admin user already exists' });
     }
 
     const admin = await AdminUser.create({
       name: 'Admin User',
-      email: 'admin@brightseedhub.com',
-      password: 'admin123',
+      email: email,
+      password: password,
       role: 'admin'
     });
 
