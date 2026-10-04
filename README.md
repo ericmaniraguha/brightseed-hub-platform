@@ -171,15 +171,33 @@ npm run dev
 # The Website will run on http://localhost:5173
 ```
 
-### Step 4: Seed the Database & Test Login
-The backend uses SQLite to automatically create the database file `backend/database.sqlite`.
-To create the root admin user, run this command in your terminal (or use Postman):
+### Step 4: Database Migrations
+Because the backend is configured to use Sequelize ORM with `alter: true`, **database migrations happen automatically**. 
+When you start the backend server (`npm run dev`), Sequelize will automatically:
+- Connect to the SQLite database (or create `backend/database.sqlite` if it doesn't exist).
+- Read all your Models (`AdminUser.js`, `Career.js`, etc.).
+- Automatically generate or alter the database tables to match your models.
+
+You do **not** need to run any manual migration commands!
+
+### Step 5: Seed the Database
+To create the root admin user so you can log into the dashboard, run this command in a new terminal window (or use Postman):
 ```bash
 curl -X POST http://localhost:8003/api/v1/admin/seed
 ```
-Now, you can test the application:
-1. **Public Site:** Open [http://localhost:5173](http://localhost:5173) in your browser.
-2. **Admin Dashboard:** Go to [http://localhost:5173/admin/login](http://localhost:5173/admin/login) and log in using the credentials listed in Section 8.
+This reads `ADMIN_EMAIL` and `ADMIN_PASSWORD` from your `.env` file and creates the user securely in the database.
+
+### Step 6: Testing the Application
+Once both servers are running and the database is seeded, you can test the platform:
+
+1. **Test the Public Site:** 
+   Open [http://localhost:5173](http://localhost:5173) in your browser. Navigate through the pages (Home, About, Services).
+2. **Test the Dynamic Careers Page:** 
+   Go to [http://localhost:5173/career](http://localhost:5173/career). If there are no jobs, it will gracefully show "No open positions right now".
+3. **Test the Admin Dashboard:** 
+   Go to [http://localhost:5173/admin/login](http://localhost:5173/admin/login) and log in using the credentials from your `.env` file (Default: `admin@brightseedhub.com` / `admin123`).
+4. **Test Data Creation:** 
+   Inside the admin dashboard, click on **Careers**, click **Add Position**, fill out the form, and save. Then go back to the public Careers page to verify the job appears instantly!
 
 ---
 
