@@ -123,3 +123,70 @@ brightseed-hub/
 ## 8. Development Credentials
 - **Admin Login:** `admin@brightseedhub.com`
 - **Admin Password:** `admin123`
+
+---
+
+## 9. How to Test & Run the Application
+
+Follow these steps to run the platform on your local machine.
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Git](https://git-scm.com/)
+
+### Step 1: Clone and Install
+First, install the dependencies for both the frontend and backend.
+```bash
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+### Step 2: Configure Environment Variables
+In the `backend` folder, duplicate the `.env.example` file and rename it to `.env`.
+```bash
+cd backend
+cp .env.example .env
+```
+*(The default settings in `.env.example` will work out of the box because the database uses SQLite locally).*
+
+### Step 3: Start the Development Servers
+You need to run both the backend API and the frontend React app simultaneously.
+
+**Terminal 1 (Backend):**
+```bash
+cd backend
+npm run dev
+# The API will run on http://localhost:8003
+```
+
+**Terminal 2 (Frontend):**
+```bash
+cd frontend
+npm run dev
+# The Website will run on http://localhost:5173
+```
+
+### Step 4: Seed the Database & Test Login
+The backend uses SQLite to automatically create the database file `backend/database.sqlite`.
+To create the root admin user, run this command in your terminal (or use Postman):
+```bash
+curl -X POST http://localhost:8003/api/v1/admin/seed
+```
+Now, you can test the application:
+1. **Public Site:** Open [http://localhost:5173](http://localhost:5173) in your browser.
+2. **Admin Dashboard:** Go to [http://localhost:5173/admin/login](http://localhost:5173/admin/login) and log in using the credentials listed in Section 8.
+
+---
+
+### (Optional) Run with Docker
+If you prefer running everything in a single container without installing Node.js locally:
+```bash
+# From the root brightseed-hub directory
+docker-compose up --build
+```
+This builds both the frontend and backend and serves them together on **port 8003**. You can then access the app at [http://localhost:8003](http://localhost:8003).
